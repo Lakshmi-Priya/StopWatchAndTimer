@@ -1,6 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, timer } from "rxjs";
-import { takeUntil } from 'rxjs/operators';
+import { timer, fromEvent, Subscription } from 'rxjs';
+import { timeInterval } from 'rxjs/operators';
+
+export interface Timer {
+  time: number
+  hours: number
+  minutes: number
+  seconds: number
+}
+
+export let initialTimeState: Timer = {
+  time: 0,
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+}
 
 @Component({
   selector: 'app-root',
@@ -8,68 +22,40 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  timeState = { ...initialTimeState }
+  isRunning: boolean = false;
+  betweenСlicksInterval: number = 3000;
+  buttonClick: Subscription;
 
-  public subject = new Subject();
-  public time: any;
-  public source: any = timer(1000, 1000);
-  public isPaused: boolean;
-  public count:number=0;
-  constructor() {
-    this.time = "00:00:00";
+  toggle(): void {
+    this.isRunning = !this.isRunning;
   }
 
-  ngOnInit() {
-    this.isPaused = false;
+  wait(event: MouseEvent): void {
+    this.buttonClick = fromEvent(event.target, 'click')
+      .pipe(timeInterval())
+        .subscribe(click => {
+          console.log(click.interval)
+        
+            this.isRunning = false;
+          
+          this.buttonClick.unsubscribe()
+        })
   }
 
-  startTimer() {
-
-    const subscribe = this.source.pipe(takeUntil(this.subject)).subscribe(val => {
-      if (!this.isPaused) { this.getDisplayTimer(val) }
-    }
-    );
+  reset(): void {
+    this.isRunning = false;
+    this.timeState = { ...initialTimeState };
   }
 
-  pauseTimer() {
-    this.count++;
-    if(this.count%2==0){
-      this.isPaused=false;
-      document.getElementById("pause").innerText="Pause"
-    }
-    else{
-      this.isPaused=true;
-      document.getElementById("pause").innerText="Resume"
-    }
-    
-  }
-
-  stopTimer() {
-    this.time = "00:00:00";
-    this.subject.next();
-  }
-
-  getDisplayTimer(time: any) {
-    var hours = '' + Math.floor(time / 3600);
-    var minutes = '' + Math.floor(time % 3600 / 60);
-    var seconds = '' + Math.floor(time % 3600 % 60);
-
-    if (Number(hours) < 10) {
-      hours = '0' + hours;
-    } else {
-      hours = '' + hours;
-    }
-    if (Number(minutes) < 10) {
-      minutes = '0' + minutes;
-    } else {
-      minutes = '' + minutes;
-    }
-    if (Number(seconds) < 10) {
-      seconds = '0' + seconds;
-    } else {
-      seconds = '' + seconds;
-    }
-    this.time = hours + ':' + minutes + ':' + seconds;
+  ngOnInit(): void {
+    timer(1000, 1000).subscribe(() => {
+      if(this.isRunning) {
+        this.timeState.time++;
+        this.timeState.seconds = Math.floor(this.timeState.time % 3600 % 60);
+        this.timeState.minutes = Math.floor(this.timeState.time % 3600 / 60);
+        this.timeState.hours = Math.floor(this.timeState.time / 3600);
+      }
+    });
   }
 }
-
-

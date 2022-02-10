@@ -1,4 +1,31 @@
-<div>{{ time }}</div>
-<button (click)="startTimer()">Start</button>
-<button (click)="pauseTimer()" id="pause">Pause</button>
-<button (click)="stopTimer()">Stop</button>
+<div>
+    <h1 >
+      Stopwatch
+    </h1>
+    <div >
+      {{ timeState.hours | number: '2.0' }} : {{ timeState.minutes | number: '2.0'  }} : {{ timeState.seconds | number: '2.0'  }}
+    </div>
+  
+    <div >
+      <button
+        type="button"
+        (click)="toggle()"       
+      >
+        {{ isRunning ? 'Stop' : 'Start'}}
+      </button>
+      
+      <button
+        type="button"
+        
+        (click)="wait($event)"
+      >
+        Wait
+      </button>
+      <button
+        type="button"
+        (click)="reset()"    
+      >
+        Reset
+      </button>
+    </div>
+  </div>
