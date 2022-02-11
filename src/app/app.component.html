@@ -1,13 +1,15 @@
-<div>
-    <h1 >
+<div class="centerFlex"> 
+    <h1 style="text-align: center;" >
       Stopwatch
     </h1>
-    <div >
-      {{ timeState.hours | number: '2.0' }} : {{ timeState.minutes | number: '2.0'  }} : {{ timeState.seconds | number: '2.0'  }}
+    <div style="text-align: center;" >
+      <h4 style="font-size: 100px;">
+        {{ timeState.hours | number: '2.0' }} : {{ timeState.minutes | number: '2.0'  }} : {{ timeState.seconds | number: '2.0'  }}
+      </h4>
     </div>
   
-    <div >
-      <button
+    <div style="text-align: center;  justify-content: space-between; " >
+      <button class="btn-primary btn-circle btn-xl"
         type="button"
         (click)="toggle()"       
       >
@@ -16,13 +18,14 @@
       
       <button
         type="button"
-        
+        class="btn-primary btn-circle btn-xl"
         (click)="wait($event)"
       >
         Wait
       </button>
       <button
         type="button"
+        class="btn-primary btn-circle btn-xl"
         (click)="reset()"    
       >
         Reset

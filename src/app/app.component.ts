@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { timer, fromEvent, Subscription } from 'rxjs';
 import { timeInterval } from 'rxjs/operators';
 
+
 export interface Timer {
   time: number
   hours: number
@@ -29,6 +30,9 @@ export class AppComponent implements OnInit {
 
   toggle(): void {
     this.isRunning = !this.isRunning;
+    if(!this.isRunning){
+      this.timeState = { ...initialTimeState };
+    }
   }
 
   wait(event: MouseEvent): void {
@@ -36,9 +40,7 @@ export class AppComponent implements OnInit {
       .pipe(timeInterval())
         .subscribe(click => {
           console.log(click.interval)
-        
-            this.isRunning = false;
-          
+          this.isRunning = false;
           this.buttonClick.unsubscribe()
         })
   }

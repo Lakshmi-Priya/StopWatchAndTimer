@@ -1,0 +1,7 @@
+.centerFlex {
+    right: 50%;
+    bottom: 60%;
+    transform: translate(50%,50%);
+    position: absolute;
+  }
+  
